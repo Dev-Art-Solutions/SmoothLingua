@@ -14,6 +14,9 @@ SmoothLingua is an open-source conversational AI platform that empowers you to c
 
 - **Extensibility:** Extend SmoothLingua to integrate with your existing systems and services.
 
+## Build status
+[![build and test](https://github.com/Dev-Art-Solutions/SmoothLingua/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/Dev-Art-Solutions/SmoothLingua/actions/workflows/build-and-test.yml)
+
 ## Quick Start
 
 ### Installation
