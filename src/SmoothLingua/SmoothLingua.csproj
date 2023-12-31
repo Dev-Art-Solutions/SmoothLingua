@@ -14,6 +14,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <IncludeSymbols>True</IncludeSymbols>
+	<PackageVersion>1.0.0-alpha</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
