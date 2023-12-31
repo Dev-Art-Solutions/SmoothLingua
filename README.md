@@ -1,6 +1,6 @@
 # SmoothLingua
 
-SmoothLingua is an open-source conversational AI platform that enables you to build and deploy conversational agents. It provides a flexible and extensible framework for creating intelligent chatbots capable of understanding and responding to user input.
+SmoothLingua is an open-source conversational AI platform that empowers you to create and deploy intelligent conversational agents. It offers a versatile and customizable framework for building smart chatbots capable of comprehending and responding to user input.
 
 ## Features
 
