@@ -1,6 +1,6 @@
 ﻿namespace SmoothLingua.Tests.Rules;
 
-using Abstractions.Rules;
+using SmoothLingua.Abstractions.Rules;
 using SmoothLingua.Rules;
 
 public class RuleManagerTests
@@ -11,8 +11,8 @@ public class RuleManagerTests
         // Arrange
         var rules = new List<Rule>
             {
-                new Rule("Greeting", "GreetingIntent", "Hello!"),
-                new Rule("Farewell", "FarewellIntent", "Goodbye!")
+                new("Greeting", "GreetingIntent", "Hello!"),
+                new("Farewell", "FarewellIntent", "Goodbye!")
             };
 
         var ruleManager = new RuleManager(rules);
@@ -31,8 +31,8 @@ public class RuleManagerTests
         // Arrange
         var rules = new List<Rule>
             {
-                new Rule("Greeting", "GreetingIntent", "Hello!"),
-                new Rule("Farewell", "FarewellIntent", "Goodbye!")
+                new("Greeting", "GreetingIntent", "Hello!"),
+                new("Farewell", "FarewellIntent", "Goodbye!")
             };
 
         var ruleManager = new RuleManager(rules);

@@ -1,28 +1,29 @@
-﻿namespace SmoothLingua.Internal;
+﻿namespace SmoothLingua.Abstractions;
 
-using Abstractions;
 using Abstractions.Stories;
-using NLU.Internal;
-using Rules.Internal;
-using Stories.Internal;
+using SmoothLingua.NLU.Internal;
+using SmoothLingua.Rules.Internal;
+using SmoothLingua.Stories.Internal;
 
-internal class DomainValidator
+public class DomainValidator
 {
-    internal static void Validate(Domain domain)
+    public static void Validate(Domain domain)
     {
-        if (domain == null)
+        ArgumentNullException.ThrowIfNull(domain);
+
+        if(domain.Intents == null)
         {
-            throw new ArgumentNullException(nameof(domain));
+            throw new ArgumentException($"{nameof(domain.Intents)} is null", nameof(domain));
         }
 
         if (domain.Stories == null)
         {
-            throw new ArgumentNullException(nameof(domain.Stories));
+            throw new ArgumentException($"{nameof(domain.Stories)} is null", nameof(domain));
         }
 
         if (domain.Rules == null)
         {
-            throw new ArgumentNullException(nameof(domain.Rules));
+            throw new ArgumentException($"{nameof(domain.Rules)} is null", nameof(domain));
         }
 
         foreach (var rule in domain.Rules)
@@ -68,7 +69,7 @@ internal class DomainValidator
             {
                 var story = domain.Stories[i];
 
-                if (story.Steps.Any(s=> s is IntentStep si && !domain.Intents.Any(x => x.Name == si.IntentName)))
+                if (story.Steps.Any(s => s is IntentStep si && !domain.Intents.Any(x => x.Name == si.IntentName)))
                 {
                     throw new ArgumentException($"Intent is missing!");
                 }
@@ -124,7 +125,7 @@ internal class DomainValidator
                                     var reponseStep = responseSteps[r];
                                     var secondResponseStep = secondResponseSteps[r];
 
-                                    if(reponseStep!.Text != secondResponseStep!.Text)
+                                    if (reponseStep!.Text != secondResponseStep!.Text)
                                     {
                                         throw new ArgumentException($"The response after same intents should be same for story {story.Name} and {secondStory.Name}");
                                     }

@@ -3,9 +3,9 @@
 using Xunit;
 using Moq;
 
-using Abstractions.Rules;
-using Abstractions.Stories;
 using SmoothLingua.Conversations;
+using SmoothLingua.Abstractions.Rules;
+using SmoothLingua.Abstractions.Stories;
 
 public class ConversationManagerTests
 {

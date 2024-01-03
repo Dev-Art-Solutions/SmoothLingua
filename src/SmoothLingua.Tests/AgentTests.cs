@@ -4,8 +4,8 @@ using Moq;
 
 using Xunit;
 
-using Abstractions.Conversations;
-using Abstractions.NLU;
+using SmoothLingua.Abstractions.Conversations;
+using SmoothLingua.Abstractions.NLU;
 
 public class AgentTests
 {

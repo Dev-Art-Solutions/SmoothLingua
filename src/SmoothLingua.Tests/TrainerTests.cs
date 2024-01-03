@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
-using Abstractions.NLU;
-using Abstractions.Stories;
-using Abstractions;
-using Abstractions.Rules;
+using SmoothLingua.Abstractions.NLU;
+using SmoothLingua.Abstractions.Stories;
+using SmoothLingua.Abstractions;
 
 public class TrainerTests
 {
@@ -19,25 +18,12 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-            new Intent("Greeting", new List<string> { "Hello", "Hi" }),
-             new Intent("Bye", new List<string> { "Bye", "Goodbye" })
-            },
-            Rules: new List<Rule>
-            {
-            new Rule("Rule1", "Greeting", "Response1")
-            },
-            Stories: new List<Story>
-            {
-            new Story(
-                "Story1",
-                new List<Step> { new IntentStep("Bye"), new ResponseStep("Response1") }
-            )
-            }
+            Intents: [new("Greeting", ["Hello", "Hi"]), new("Bye", ["Bye", "Goodbye"])],
+            Rules: [new("Rule1", "Greeting", "Response1")],
+            Stories: [new("Story1", [new IntentStep("Bye"), new ResponseStep("Response1")])]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var stream = new MemoryStream();
 
         trainerMock.Setup(t => t.Train(It.IsAny<List<Intent>>(), It.IsAny<Stream>()));
@@ -58,7 +44,9 @@ public class TrainerTests
         var trainer = new Trainer();
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(() => trainer.Train(null, "path"));
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+        await Assert.ThrowsAsync<ArgumentNullException>(() => trainer.Train(default, "path"));
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
     }
 
     [Fact]
@@ -66,15 +54,15 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-            new Intent(null, new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>()
+            Intents:
+            [
+            new(string.Empty, ["Hello"])
+            ],
+            Rules: [],
+            Stories: []
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -86,18 +74,18 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>
-            {
-                new Rule(null, "Greeting", "Response1")
-            },
-            Stories: new List<Story>()
+            Intents:
+            [
+                new("Greeting", ["Hello"])
+            ],
+            Rules:
+            [
+                new(string.Empty, "Greeting", "Response1")
+            ],
+            Stories: []
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -109,18 +97,18 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new IntentStep("Greeting") })
-            }
+            Intents:
+            [
+                new("Greeting", ["Hello"])
+            ],
+            Rules: [],
+            Stories:
+            [
+                new("Story1", [new IntentStep("Greeting")])
+            ]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -132,19 +120,13 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>
-            {
-                new Rule("Rule1", "Greeting", "Response1"),
-                new Rule("Rule2", "Greeting", "Response2")
-            },
-            Stories: new List<Story>()
+            Intents: [new("Greeting", ["Hello"])],
+            Rules: [new("Rule1", "Greeting", "Response1"),
+                new("Rule2", "Greeting", "Response2")],
+            Stories: []
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -157,18 +139,18 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new ResponseStep("Response1") })
-            }
+            Intents:
+            [
+                new("Greeting", ["Hello"])
+            ],
+            Rules: [],
+            Stories:
+            [
+                new("Story1", [new ResponseStep("Response1")])
+            ]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -180,19 +162,13 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new IntentStep("Greeting"), new ResponseStep("Response1") }),
-                new Story("Story2", new List<Step> { new ResponseStep("Response2") })
-            }
+            Intents:
+            [new("Greeting", ["Hello"])],
+            Rules: [],
+            Stories:[new("Story1", [new IntentStep("Greeting"), new ResponseStep("Response1")]), new("Story2", [new ResponseStep("Response2")])]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -204,19 +180,19 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new IntentStep("Greeting"), new ResponseStep("Response1") }),
-                new Story("Story2", new List<Step> { new IntentStep("Greeting"), new ResponseStep("Response2") })
-            }
+            Intents:
+            [
+                new("Greeting", ["Hello"])
+            ],
+            Rules: [],
+            Stories:
+            [
+                new("Story1", [new IntentStep("Greeting"), new ResponseStep("Response1")]),
+                new("Story2", [new IntentStep("Greeting"), new ResponseStep("Response2")])
+            ]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -228,19 +204,19 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new IntentStep("Greeting"), new ResponseStep("Response1") }),
-                new Story("Story2", new List<Step> { new IntentStep("Greeting"), new ResponseStep("Response2"), new ResponseStep("Response3") })
-            }
+            Intents:
+            [
+                new("Greeting", ["Hello"])
+            ],
+            Rules: [],
+            Stories:
+            [
+                new("Story1", [new IntentStep("Greeting"), new ResponseStep("Response1")]),
+                new("Story2", [new IntentStep("Greeting"), new ResponseStep("Response2"), new ResponseStep("Response3")])
+            ]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -252,18 +228,12 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>
-            {
-                new Rule("Rule1", "Farewell", "Response1")
-            },
-            Stories: new List<Story>()
+            Intents: [new("Greeting", ["Hello"])],
+            Rules: [new("Rule1", "Farewell", "Response1")],
+            Stories: []
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -276,21 +246,21 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>
-            {
-                new Rule("Rule1", "Greeting", "Response1")
-            },
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new IntentStep("Greeting"), new ResponseStep("Response1") })
-            }
+            Intents:
+            [
+                new("Greeting", ["Hello"])
+            ],
+            Rules:
+            [
+                new("Rule1", "Greeting", "Response1")
+            ],
+            Stories:
+            [
+                new("Story1", [new IntentStep("Greeting"), new ResponseStep("Response1")])
+            ]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -303,18 +273,12 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new IntentStep("Greeting"), new IntentStep("Farewell") })
-            }
+            Intents: [new("Greeting", ["Hello"])],
+            Rules: [],
+            Stories: [new("Story1", [new IntentStep("Greeting"), new IntentStep("Farewell")])]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -327,18 +291,18 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new IntentStep("Greeting") })
-            }
+            Intents:
+            [
+                new("Greeting", ["Hello"])
+            ],
+            Rules: [],
+            Stories:
+            [
+                new("Story1", [new IntentStep("Greeting")])
+            ]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
@@ -351,26 +315,24 @@ public class TrainerTests
     {
         // Arrange
         var domain = new Domain(
-            Intents: new List<Intent>
-            {
-                new Intent("Greeting", new List<string> { "Hello" })
-            },
-            Rules: new List<Rule>(),
-            Stories: new List<Story>
-            {
-                new Story("Story1", new List<Step> { new IntentStep("Greeting"),
+            Intents:
+            [
+                new("Greeting", ["Hello"])
+            ],
+            Rules: [],
+            Stories:
+            [
+                new("Story1", [ new IntentStep("Greeting"),
                 new ResponseStep("Greeting"),
-                new IntentStep("Greeting")})
-            }
+                new IntentStep("Greeting")])
+            ]
         );
 
-        var trainerMock = new Mock<Abstractions.NLU.ITrainer>();
+        var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
         Assert.Contains("Last step of the story should be response", exception.Message);
-
-        // Additional assertions can be added based on your specific requirements
     }
 }

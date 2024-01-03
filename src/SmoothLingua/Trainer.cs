@@ -2,23 +2,17 @@
 
 using System.IO;
 using System.IO.Compression;
-
-using Abstractions;
-using Internal;
 using Newtonsoft.Json;
 
-public class Trainer : ITrainer
+using Abstractions;
+
+public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
 {
-    private readonly Abstractions.NLU.ITrainer trainer;
+    private readonly Abstractions.NLU.ITrainer trainer = trainer;
 
     public Trainer()
         : this(new NLU.Trainer())
     {
-    }
-
-    public Trainer(Abstractions.NLU.ITrainer trainer)
-    {
-        this.trainer = trainer;
     }
 
     public async Task Train(Domain domain, string path)
@@ -26,10 +20,8 @@ public class Trainer : ITrainer
         DomainValidator.Validate(domain);
         trainer.Train(domain.Intents, path);
 
-        using (FileStream zipToOpen = new FileStream(path, FileMode.Open))
-        {
-            await StoreDomain(domain, zipToOpen);
-        }
+        using FileStream zipToOpen = new(path, FileMode.Open);
+        await StoreDomain(domain, zipToOpen);
     }
 
     public async Task Train(Domain domain, Stream stream)
@@ -39,11 +31,11 @@ public class Trainer : ITrainer
         await StoreDomain(domain, stream);
     }
 
-    private async Task StoreDomain(Domain domain, Stream stream)
+    private static async Task StoreDomain(Domain domain, Stream stream)
     {
-        using ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Update);
+        using ZipArchive archive = new(stream, ZipArchiveMode.Update);
         ZipArchiveEntry readmeEntry = archive.CreateEntry("domain.json");
-        using StreamWriter writer = new StreamWriter(readmeEntry.Open());
+        using StreamWriter writer = new(readmeEntry.Open());
         writer.AutoFlush = true;
         await writer.WriteAsync(JsonConvert.SerializeObject(domain, Formatting.Indented, new JsonSerializerSettings
         {

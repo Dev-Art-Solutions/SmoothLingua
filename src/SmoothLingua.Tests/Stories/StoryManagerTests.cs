@@ -1,6 +1,6 @@
 ﻿namespace SmoothLingua.Tests.Stories;
 
-using Abstractions.Stories;
+using SmoothLingua.Abstractions.Stories;
 using SmoothLingua.Stories;
 
 public class StoryManagerTests
@@ -17,10 +17,10 @@ public class StoryManagerTests
         var storyManager = new StoryManager(stories);
 
         // Set up active stories
-        var activeStory = new Story("Story", new List<Step>
-                {
+        var activeStory = new Story("Story",
+                [
                     new IntentStep("Greeting"),
-                    new ResponseStep("Hello!") });
+                    new ResponseStep("Hello!") ]);
 
         // Use reflection to set the internal state for testing
         SetInternalState(storyManager, "activeStories", new List<Story> { activeStory });
@@ -31,29 +31,19 @@ public class StoryManagerTests
 
         // Assert
         Assert.True(result);
-        Assert.Equal(new List<string> { "Hello!" }, responses);
+        Assert.Equal(["Hello!"], responses);
         Assert.Equal(2, GetInternalState<int>(storyManager, "activeStep")); // Assert that activeStep is updated
     }
-
-    // Add more tests using reflection as needed
 
     private static void SetInternalState<T>(object obj, string fieldName, T value)
     {
         var field = obj.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        if (field != null)
-        {
-            field.SetValue(obj, value);
-        }
+        field?.SetValue(obj, value);
     }
 
     private static T? GetInternalState<T>(object obj, string fieldName)
     {
         var field = obj.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        if (field != null)
-        {
-            return (T?)field.GetValue(obj);
-        }
-
-        return default;
+        return field != null ? (T?)field.GetValue(obj) : default;
     }
 }

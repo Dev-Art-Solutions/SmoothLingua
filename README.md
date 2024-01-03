@@ -24,7 +24,7 @@ SmoothLingua is an open-source conversational AI platform that empowers you to c
 Install SmoothLingua via NuGet Package Manager Console:
 
 ```bash
-Install-Package SmoothLingua -Version 1.0.0-alpha
+Install-Package SmoothLingua -Version 1.0.1-alpha
 ```
 
 ### Example

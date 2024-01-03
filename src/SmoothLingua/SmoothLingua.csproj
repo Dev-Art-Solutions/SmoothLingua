@@ -14,7 +14,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <IncludeSymbols>True</IncludeSymbols>
-	<PackageVersion>1.0.0-alpha</PackageVersion>
+	<PackageVersion>1.0.1-alpha</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,6 +37,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Internal\" />
   </ItemGroup>
 
 </Project>
