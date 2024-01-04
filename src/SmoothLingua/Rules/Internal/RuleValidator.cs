@@ -6,12 +6,9 @@ internal class RuleValidator
 {
     public static void Validate(Rule rule)
     {
-        if (rule == null)
-        {
-            throw new ArgumentNullException(nameof(rule));
-        }
+        ArgumentNullException.ThrowIfNull(rule);
 
-        if(string.IsNullOrEmpty(rule.Name))
+        if (string.IsNullOrEmpty(rule.Name))
         {
             throw new ArgumentException($"Rule name can't be null or empty.");
         }

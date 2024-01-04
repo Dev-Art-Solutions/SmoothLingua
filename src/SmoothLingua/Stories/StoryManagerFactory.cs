@@ -2,12 +2,9 @@
 
 namespace SmoothLingua.Stories;
 
-public class StoryManagerFactory : IStoryManagerFactory
+public class StoryManagerFactory(List<Story> stories) : IStoryManagerFactory
 {
-    private readonly List<Story> stories;
-
-    public StoryManagerFactory(List<Story> stories)
-        => this.stories = stories;
+    private readonly List<Story> stories = stories;
 
     public IStoryManager Create()
         => new StoryManager(this.stories);

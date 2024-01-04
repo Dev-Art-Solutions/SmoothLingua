@@ -4,16 +4,10 @@ using Abstractions;
 using Abstractions.Conversations;
 using Abstractions.NLU;
 
-public class Agent : IAgent
+public class Agent(IPredictor predictor, IConversationManager conversationManager) : IAgent
 {
-    private IPredictor predictor;
-    private IConversationManager conversationManager;
-
-    public Agent(IPredictor predictor, IConversationManager conversationManager)
-    {
-        this.predictor = predictor;
-        this.conversationManager = conversationManager;
-    }
+    private readonly IPredictor predictor = predictor;
+    private readonly IConversationManager conversationManager = conversationManager;
 
     public Response Handle(string conversationId, string input)
     {

@@ -6,19 +6,16 @@ public class IntentValidator
 {
     public static void Validate(Intent intent)
     {
-        if(intent == null)
-        {
-            throw new ArgumentNullException(nameof(intent));
-        }
+        ArgumentNullException.ThrowIfNull(intent);
 
-        if(string.IsNullOrEmpty(intent.Name))
+        if (string.IsNullOrEmpty(intent.Name))
         {
-            throw new ArgumentNullException(nameof(intent.Name));
+            throw new ArgumentException($"{nameof(intent.Name)} is null", nameof(intent));
         }
 
         if(intent.Examples == null)
         {
-            throw new ArgumentNullException(nameof(intent.Examples));
+            throw new ArgumentException($"{nameof(intent.Examples)} is null", nameof(intent));
         }
 
         if(intent.Examples.Count == 0)
@@ -30,7 +27,7 @@ public class IntentValidator
         {
             if (string.IsNullOrEmpty(example))
             {
-                throw new ArgumentNullException(nameof(example));
+                throw new ArgumentException($"Intent example is empty {nameof(example)}", intent.Name);
             }
         }
     }

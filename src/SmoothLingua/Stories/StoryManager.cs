@@ -2,15 +2,12 @@
 
 using Abstractions.Stories;
 
-public class StoryManager : IStoryManager
+public class StoryManager(List<Story> stories) : IStoryManager
 {
-    private readonly List<Story> stories;
+    private readonly List<Story> stories = stories;
 
     private int activeStep = 0;
-    private List<Story> activeStories = new List<Story>();
-
-    public StoryManager(List<Story> stories)
-        => this.stories = stories;
+    private List<Story> activeStories = [];
 
     public void ClearState()
     {
@@ -32,7 +29,7 @@ public class StoryManager : IStoryManager
 
     private bool TryGetResponseFromStories(List<Story> currentStories, string intentName, out List<string> responses) 
     {
-        responses = new List<string>();
+        responses = [];
         var currentActiveStories = currentStories.Where(x => x.Steps.Count > activeStep &&
          ((IntentStep)x.Steps[activeStep]).IntentName == intentName).ToList();
 

@@ -31,7 +31,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act
-        await trainer.Train(domain, stream);
+        await trainer.Train(domain, stream, default);
 
         // Assert
         trainerMock.Verify(t => t.Train(domain.Intents, stream), Times.Once);
@@ -45,7 +45,7 @@ public class TrainerTests
 
         // Act & Assert
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        await Assert.ThrowsAsync<ArgumentNullException>(() => trainer.Train(default, "path"));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => trainer.Train(default, "path", default));
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
     }
 
@@ -66,7 +66,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(() => trainer.Train(domain, "path"));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => trainer.Train(domain, "path", default));
     }
 
     [Fact]
@@ -89,7 +89,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
     }
 
 
@@ -154,7 +154,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
     }
 
     [Fact]
@@ -172,7 +172,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
     }
 
     [Fact]
@@ -196,7 +196,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
     }
 
     [Fact]
@@ -220,7 +220,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
     }
 
     [Fact]
@@ -237,7 +237,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
         Assert.Contains("Intent Farewell is missing", exception.Message);
     }
 
@@ -264,7 +264,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
         Assert.Contains("Story can't have intent which is part of the rule", exception.Message);
     }
 
@@ -282,7 +282,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
         Assert.Contains("Two consecutive can't be intents.", exception.Message);
     }
 
@@ -306,7 +306,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
         Assert.Contains("Story should have at least two steps.", exception.Message);
     }
 
@@ -332,7 +332,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path"));
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
         Assert.Contains("Last step of the story should be response", exception.Message);
     }
 }

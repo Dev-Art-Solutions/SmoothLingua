@@ -2,7 +2,7 @@
 
 public interface ITrainer
 {
-    Task Train(Domain domain, string path);
+    Task Train(Domain domain, string path, CancellationToken cancellationToken = default);
 
-    Task Train(Domain domain, Stream stream);
+    Task Train(Domain domain, Stream stream, CancellationToken cancellationToken = default);
 }

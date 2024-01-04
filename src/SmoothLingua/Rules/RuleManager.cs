@@ -2,12 +2,9 @@
 
 using Abstractions.Rules;
 
-public class RuleManager : IRuleManager
+public class RuleManager(List<Rule> rules) : IRuleManager
 {
-    private readonly List<Rule> rules;
-
-    public RuleManager(List<Rule> rules)
-        => this.rules = rules;
+    private readonly List<Rule> rules = rules;
 
     public bool TryGetResponse(string intentName, out string? response)
     {

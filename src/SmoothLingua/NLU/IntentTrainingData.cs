@@ -2,19 +2,13 @@
 
 using Microsoft.ML.Data;
 
-internal class IntentTrainingData
+internal class IntentTrainingData(string text, string label)
 {
-    public IntentTrainingData(string text, string label)
-    {
-        Text = text;
-        Label = label;
-    }
-
     [LoadColumnName("Text")]
     [LoadColumn(0)]
-    public string Text { get; }
+    public string Text { get; } = text;
 
     [LoadColumnName("Label")]
     [LoadColumn(1)]
-    public string Label { get; }
+    public string Label { get; } = label;
 }

@@ -6,17 +6,11 @@ using Abstractions.Conversations;
 using SmoothLingua.Abstractions.Rules;
 using SmoothLingua.Abstractions.Stories;
 
-public class ConversationManager : IConversationManager
+public class ConversationManager(IRuleManagerFactory ruleManagerFactory, IStoryManagerFactory storyManagerFactory) : IConversationManager
 {
-    private readonly IRuleManagerFactory ruleManagerFactory;
-    private readonly IStoryManagerFactory storyManagerFactory;
-    private readonly ConcurrentDictionary<string, Conversation> conversations = new ConcurrentDictionary<string, Conversation>();
-
-    public ConversationManager(IRuleManagerFactory ruleManagerFactory, IStoryManagerFactory storyManagerFactory)
-    {
-        this.ruleManagerFactory = ruleManagerFactory;
-        this.storyManagerFactory = storyManagerFactory;
-    }
+    private readonly IRuleManagerFactory ruleManagerFactory = ruleManagerFactory;
+    private readonly IStoryManagerFactory storyManagerFactory = storyManagerFactory;
+    private readonly ConcurrentDictionary<string, Conversation> conversations = new();
 
     public IConversation Get(string conversationId)
         => conversations.GetOrAdd(conversationId,

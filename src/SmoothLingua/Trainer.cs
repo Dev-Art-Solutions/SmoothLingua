@@ -15,23 +15,23 @@ public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
     {
     }
 
-    public async Task Train(Domain domain, string path)
+    public async Task Train(Domain domain, string path, CancellationToken cancellationToken)
     {
         DomainValidator.Validate(domain);
         trainer.Train(domain.Intents, path);
 
         using FileStream zipToOpen = new(path, FileMode.Open);
-        await StoreDomain(domain, zipToOpen);
+        await StoreDomain(domain, zipToOpen, cancellationToken);
     }
 
-    public async Task Train(Domain domain, Stream stream)
+    public async Task Train(Domain domain, Stream stream, CancellationToken cancellationToken)
     {
         DomainValidator.Validate(domain);
         trainer.Train(domain.Intents, stream);
-        await StoreDomain(domain, stream);
+        await StoreDomain(domain, stream, cancellationToken);
     }
 
-    private static async Task StoreDomain(Domain domain, Stream stream)
+    private static async Task StoreDomain(Domain domain, Stream stream, CancellationToken cancellationToken)
     {
         using ZipArchive archive = new(stream, ZipArchiveMode.Update);
         ZipArchiveEntry readmeEntry = archive.CreateEntry("domain.json");
@@ -40,6 +40,6 @@ public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
         await writer.WriteAsync(JsonConvert.SerializeObject(domain, Formatting.Indented, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.Auto
-        }));
+        }).ToArray(), cancellationToken);
     }
 }

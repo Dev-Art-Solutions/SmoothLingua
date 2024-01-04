@@ -36,7 +36,7 @@ trainer.Train(new Domain(
     [
         new ("Bye","Bye","Bye")
     ]
-    ), memoryStream).Wait();
+    ), memoryStream, default).Wait();
 
 var conversationId = Guid.NewGuid().ToString();
 var agent = await AgentLoader.Load(new MemoryStream(memoryStream.GetBuffer()));
