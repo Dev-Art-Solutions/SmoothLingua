@@ -66,7 +66,7 @@ public class TrainerTests
         var trainer = new Trainer(trainerMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(() => trainer.Train(domain, "path", default));
+        await Assert.ThrowsAsync<ArgumentException>(() => trainer.Train(domain, "path", default));
     }
 
     [Fact]
