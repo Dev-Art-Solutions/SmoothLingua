@@ -5,9 +5,12 @@ using System.IO.Compression;
 using Newtonsoft.Json;
 
 using Abstractions;
+using NLU.Internal;
 
 public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
 {
+
+
     private readonly Abstractions.NLU.ITrainer trainer = trainer;
 
     public Trainer()
@@ -18,7 +21,11 @@ public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
     public async Task Train(Domain domain, string path, CancellationToken cancellationToken)
     {
         DomainValidator.Validate(domain);
-        trainer.Train(domain.Intents, path);
+
+        if (domain.Intents.Count >= NLUContants.MinIntentCount)
+        {
+            trainer.Train(domain.Intents, path);
+        }
 
         using FileStream zipToOpen = new(path, FileMode.Open);
         await StoreDomain(domain, zipToOpen, cancellationToken);
@@ -27,7 +34,12 @@ public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
     public async Task Train(Domain domain, Stream stream, CancellationToken cancellationToken)
     {
         DomainValidator.Validate(domain);
-        trainer.Train(domain.Intents, stream);
+
+        if (domain.Intents.Count >= NLUContants.MinIntentCount)
+        {
+            trainer.Train(domain.Intents, stream);
+        }
+
         await StoreDomain(domain, stream, cancellationToken);
     }
 
