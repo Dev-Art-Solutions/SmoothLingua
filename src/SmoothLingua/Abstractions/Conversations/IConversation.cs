@@ -5,4 +5,6 @@ public interface IConversation
     string Id { get; }
 
     List<string> HandleIntent(string intentName);
+
+    void Reset();
 }

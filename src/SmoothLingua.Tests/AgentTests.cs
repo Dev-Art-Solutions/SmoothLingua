@@ -40,4 +40,24 @@ public class AgentTests
         conversationManagerMock.Verify(cm => cm.Get(conversationId), Times.Once);
         conversationMock.Verify(c => c.HandleIntent(intentName), Times.Once);
     }
+
+    [Fact]
+    public void Handle_Reset()
+    {
+        // Arrange
+        var conversationId = "123";
+        var predictorMock = new Mock<IPredictor>();
+
+        var conversationManagerMock = new Mock<IConversationManager>();
+        var conversationMock = new Mock<IConversation>();
+        conversationManagerMock.Setup(cm => cm.Get(conversationId)).Returns(conversationMock.Object);
+
+        var agent = new Agent(predictorMock.Object, conversationManagerMock.Object);
+
+        // Act
+        agent.Reset(conversationId);
+
+        // Assert
+        conversationMock.Verify(c => c.Reset(), Times.Once);
+    }
 }

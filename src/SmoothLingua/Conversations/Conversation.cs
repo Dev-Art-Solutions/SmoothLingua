@@ -34,4 +34,9 @@ public class Conversation : IConversation
 
         return result;
     }
+
+    public void Reset()
+    {
+        storyManager.ClearState();
+    }
 }
