@@ -16,6 +16,11 @@ public class DomainValidator
             throw new ArgumentException($"{nameof(domain.Intents)} is null", nameof(domain));
         }
 
+        if(domain.Intents.Count == 0)
+        {
+            throw new ArgumentException($"You can't have domain with 0 intents", nameof(domain));
+        }
+
         if (domain.Stories == null)
         {
             throw new ArgumentException($"{nameof(domain.Stories)} is null", nameof(domain));

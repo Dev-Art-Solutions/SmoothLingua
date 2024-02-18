@@ -5,8 +5,10 @@ using System.IO.Compression;
 using Newtonsoft.Json;
 
 using Abstractions;
+using Abstractions.NLU;
 using Conversations;
 using NLU;
+using NLU.Internal;
 using Rules;
 using Stories;
 
@@ -20,7 +22,7 @@ public class AgentLoader
             domain = await GetDomain(file, cancellationToken);
         }
 
-        var predictor = new Predictor(modelPath);
+        var predictor = NLUContants.MinIntentCount <= domain.Intents.Count ? new Predictor(modelPath) : (IPredictor)new SingleIntentPredictor(domain.Intents[0].Name);
         var ruleManagerFactory = new RuleManagerFactory(domain.Rules);
         var storyManagerFactory = new StoryManagerFactory(domain.Stories);
 
@@ -30,7 +32,7 @@ public class AgentLoader
     public static async Task<IAgent> Load(Stream stream, CancellationToken cancellationToken = default)
     {
         var domain = await GetDomain(stream, cancellationToken);
-        var predictor = new Predictor(stream);
+        var predictor = NLUContants.MinIntentCount <= domain.Intents.Count ? new Predictor(stream) : (IPredictor)new SingleIntentPredictor(domain.Intents[0].Name);
         var ruleManagerFactory = new RuleManagerFactory(domain.Rules);
         var storyManagerFactory = new StoryManagerFactory(domain.Stories);
 
