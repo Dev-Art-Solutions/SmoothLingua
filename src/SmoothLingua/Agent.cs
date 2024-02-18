@@ -17,4 +17,10 @@ public class Agent(IPredictor predictor, IConversationManager conversationManage
 
         return new Response(intentName, messages);
     }
+
+    public void Reset(string conversationId)
+    {
+        var conversation = conversationManager.Get(conversationId);
+        conversation.Reset();
+    }
 }
