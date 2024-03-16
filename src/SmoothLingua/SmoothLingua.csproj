@@ -8,13 +8,13 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Dev-Art-Solutions/SmoothLingua</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/Dev-Art-Solutions/SmoothLingua</PackageProjectUrl>
+    <PackageProjectUrl>https://smooth-lingua.com/</PackageProjectUrl>
     <Description>SmoothLingua is an open-source conversational AI platform that enables you to build and deploy conversational agents. It provides a flexible and extensible framework for creating intelligent chatbots capable of understanding and responding to user input.</Description>
     <Title>SmoothLingua</Title>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <IncludeSymbols>True</IncludeSymbols>
-	  <PackageVersion>1.0.5</PackageVersion>
+	  <PackageVersion>1.0.6</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
