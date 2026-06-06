@@ -15,6 +15,6 @@ public class ConversationManager(IRuleManagerFactory ruleManagerFactory, IStoryM
     public IConversation Get(string conversationId)
         => conversations.GetOrAdd(conversationId,
             (x) => new Conversation(conversationId,
-                ruleManagerFactory.Create(), 
+                ruleManagerFactory.Create(),
                 storyManagerFactory.Create()));
 }

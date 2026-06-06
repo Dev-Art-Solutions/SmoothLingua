@@ -165,7 +165,7 @@ public class TrainerTests
             Intents:
             [new("Greeting", ["Hello"])],
             Rules: [],
-            Stories:[new("Story1", [new IntentStep("Greeting"), new ResponseStep("Response1")]), new("Story2", [new ResponseStep("Response2")])]
+            Stories: [new("Story1", [new IntentStep("Greeting"), new ResponseStep("Response1")]), new("Story2", [new ResponseStep("Response2")])]
         );
 
         var trainerMock = new Mock<SmoothLingua.Abstractions.NLU.ITrainer>();

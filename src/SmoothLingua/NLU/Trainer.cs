@@ -24,7 +24,7 @@ public class Trainer : ITrainer
     public void Train(List<Intent> intents, Stream stream)
     {
         var context = new MLContext();
-        var trainingData = PrepareData(context,intents);
+        var trainingData = PrepareData(context, intents);
         var transformer = TrainModel(context, trainingData);
 
         context.Model.Save(transformer, trainingData.Schema, stream);

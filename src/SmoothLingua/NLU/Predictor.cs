@@ -8,13 +8,13 @@ public class Predictor : IPredictor
 {
     private readonly PredictionEngine<IntentTrainingData, IntentPrediction> predictionEngine;
 
-    public Predictor(string filePath) 
+    public Predictor(string filePath)
     {
         var context = new MLContext();
         predictionEngine = context.Model.CreatePredictionEngine<IntentTrainingData, IntentPrediction>(context.Model.Load(filePath, out var _));
     }
 
-    public Predictor(Stream stream) 
+    public Predictor(Stream stream)
     {
         var context = new MLContext();
         predictionEngine = context.Model.CreatePredictionEngine<IntentTrainingData, IntentPrediction>(context.Model.Load(stream, out var _));

@@ -9,9 +9,9 @@ public class RuleManager(List<Rule> rules) : IRuleManager
     public bool TryGetResponse(string intentName, out string? response)
     {
         response = default;
-        var rule = rules.FirstOrDefault(x=> x.IntentName == intentName);
+        var rule = rules.FirstOrDefault(x => x.IntentName == intentName);
 
-        if(rule != null)
+        if (rule != null)
         {
             response = rule.Response;
         }

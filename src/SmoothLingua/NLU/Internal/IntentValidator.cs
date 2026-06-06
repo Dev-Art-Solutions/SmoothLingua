@@ -13,17 +13,17 @@ public class IntentValidator
             throw new ArgumentException($"{nameof(intent.Name)} is null", nameof(intent));
         }
 
-        if(intent.Examples == null)
+        if (intent.Examples == null)
         {
             throw new ArgumentException($"{nameof(intent.Examples)} is null", nameof(intent));
         }
 
-        if(intent.Examples.Count == 0)
+        if (intent.Examples.Count == 0)
         {
             throw new ArgumentException("Examples should have at least one example");
         }
 
-        foreach(var example in intent.Examples)
+        foreach (var example in intent.Examples)
         {
             if (string.IsNullOrEmpty(example))
             {

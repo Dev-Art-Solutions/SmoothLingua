@@ -28,9 +28,9 @@ internal class StoryValidator
 
         bool isIntent = false;
 
-        for(int i = 0; i < story.Steps.Count; i++)
+        for (int i = 0; i < story.Steps.Count; i++)
         {
-            if(isIntent && story.Steps[i] is IntentStep)
+            if (isIntent && story.Steps[i] is IntentStep)
             {
                 throw new ArgumentException($"Two consecutive can't be intents.");
             }

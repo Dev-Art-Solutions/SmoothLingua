@@ -36,7 +36,7 @@ public class DomainValidatorTests
     {
         // Arrange
         var intent = new Intent("TestIntent", ["example1", "example2"]);
-        var domain = new Domain([intent], [], [new("Missing","Test2", "Wrong")]);
+        var domain = new Domain([intent], [], [new("Missing", "Test2", "Wrong")]);
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => DomainValidator.Validate(domain));

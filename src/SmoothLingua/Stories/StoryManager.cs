@@ -27,7 +27,7 @@ public class StoryManager(List<Story> stories) : IStoryManager
         return TryGetResponseFromStories(stories, intentName, out responses);
     }
 
-    private bool TryGetResponseFromStories(List<Story> currentStories, string intentName, out List<string> responses) 
+    private bool TryGetResponseFromStories(List<Story> currentStories, string intentName, out List<string> responses)
     {
         responses = [];
         var currentActiveStories = currentStories.Where(x => x.Steps.Count > activeStep &&
