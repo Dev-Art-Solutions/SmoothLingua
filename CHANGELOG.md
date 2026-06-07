@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-07
+
+### Added
+- Rewritten README with hero paragraph, Concepts section (Intent/Story/Rule/Domain/Agent), Quick Start, and "When SmoothLingua, when not" guidance.
+- `<GenerateDocumentationFile>` enabled in `SmoothLingua.csproj` — NuGet consumers now get IntelliSense descriptions.
+- XML documentation comments on all public types: `IAgent`, `ITrainer`, `Agent`, `AgentLoader`, `Trainer`, `Domain`, `Intent`, `Story`, `Rule`, `Response`.
+- Second QuickStart example demonstrating model training and loading from a file (`model.zip`) instead of a `MemoryStream`.
+- Automated website deploy workflow (`.github/workflows/deploy.yml`) for `smooth-lingua.com` — publishes to GitHub Pages on every push to `main`.
+
+### Changed
+- Website (`smooth-lingua.com`) content updated to match the new library documentation: Concepts section, updated Quick Start, When/Not guidance, and refreshed Changelog.
+
 ## [1.1.0] - 2026-06-06
 
 ### Added
@@ -32,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Trainer`, `Agent`, `AgentLoader`, `Conversation`, `Domain` core types.
 - NuGet package `SmoothLingua`.
 
-[Unreleased]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.0.6...v1.1.0
 [1.0.6]: https://github.com/Dev-Art-Solutions/SmoothLingua/releases/tag/v1.0.6

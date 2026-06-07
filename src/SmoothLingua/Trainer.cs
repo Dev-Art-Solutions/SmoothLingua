@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 using Abstractions;
 using NLU.Internal;
 
+/// <summary>
+/// Trains a <see cref="Abstractions.Domain"/> using ML.NET and serialises the resulting model to a zip archive
+/// that can later be loaded by <see cref="AgentLoader"/>.
+/// </summary>
 public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
 {
 
@@ -18,6 +22,7 @@ public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
     {
     }
 
+    /// <inheritdoc/>
     public async Task Train(Domain domain, string path, CancellationToken cancellationToken)
     {
         DomainValidator.Validate(domain);
@@ -31,6 +36,7 @@ public class Trainer(Abstractions.NLU.ITrainer trainer) : ITrainer
         await StoreDomain(domain, zipToOpen, cancellationToken);
     }
 
+    /// <inheritdoc/>
     public async Task Train(Domain domain, Stream stream, CancellationToken cancellationToken)
     {
         DomainValidator.Validate(domain);
