@@ -23,7 +23,7 @@ public class AgentTests
 
         var conversationManagerMock = new Mock<IConversationManager>();
         var conversationMock = new Mock<IConversation>();
-        conversationMock.Setup(c => c.HandleIntent(intentName)).Returns(predictedMessages);
+        conversationMock.Setup(c => c.HandleIntent(intentName, input)).Returns(predictedMessages);
         conversationManagerMock.Setup(cm => cm.Get(conversationId)).Returns(conversationMock.Object);
 
         var agent = new Agent(predictorMock.Object, conversationManagerMock.Object);
@@ -38,7 +38,7 @@ public class AgentTests
         // Verify that methods were called with the correct arguments
         predictorMock.Verify(p => p.Predict(input), Times.Once);
         conversationManagerMock.Verify(cm => cm.Get(conversationId), Times.Once);
-        conversationMock.Verify(c => c.HandleIntent(intentName), Times.Once);
+        conversationMock.Verify(c => c.HandleIntent(intentName, input), Times.Once);
     }
 
     [Fact]

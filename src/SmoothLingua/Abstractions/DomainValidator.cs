@@ -46,6 +46,20 @@ public class DomainValidator
             IntentValidator.Validate(intent);
         }
 
+        if (domain.Slots != null)
+        {
+            foreach (var slot in domain.Slots)
+            {
+                if (slot.Entity != null)
+                {
+                    if (domain.Entities == null || !domain.Entities.Any(x => x.Name == slot.Entity))
+                    {
+                        throw new ArgumentException($"Entity {slot.Entity} is missing!");
+                    }
+                }
+            }
+        }
+
         foreach (var rule in domain.Rules)
         {
             if (domain.Rules.Any(x => x.Name != rule.Name &&

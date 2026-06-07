@@ -4,7 +4,7 @@ public interface IConversation
 {
     string Id { get; }
 
-    List<string> HandleIntent(string intentName);
+    List<string> HandleIntent(string intentName, string input);
 
     void Reset();
 }
