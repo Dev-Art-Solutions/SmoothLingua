@@ -4,6 +4,7 @@ using Xunit;
 using Moq;
 
 using SmoothLingua.Conversations;
+using SmoothLingua.Abstractions;
 using SmoothLingua.Abstractions.Rules;
 using SmoothLingua.Abstractions.Stories;
 
@@ -16,8 +17,9 @@ public class ConversationManagerTests
         var conversationId = "456";
         var ruleManagerFactoryMock = new Mock<IRuleManagerFactory>();
         var storyManagerFactoryMock = new Mock<IStoryManagerFactory>();
+        var domain = new Domain([], [], []);
 
-        var conversationManager = new ConversationManager(ruleManagerFactoryMock.Object, storyManagerFactoryMock.Object);
+        var conversationManager = new ConversationManager(ruleManagerFactoryMock.Object, storyManagerFactoryMock.Object, domain);
 
         // Act
         var result = conversationManager.Get(conversationId);
