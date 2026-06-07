@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `<GenerateDocumentationFile>` enabled in `SmoothLingua.csproj` — NuGet consumers now get IntelliSense descriptions.
 - XML documentation comments on all public types: `IAgent`, `ITrainer`, `Agent`, `AgentLoader`, `Trainer`, `Domain`, `Intent`, `Story`, `Rule`, `Response`.
 - Second QuickStart example demonstrating model training and loading from a file (`model.zip`) instead of a `MemoryStream`.
-- Automated website deploy workflow (`.github/workflows/deploy.yml`) for `smooth-lingua.com` — publishes to GitHub Pages on every push to `main`.
 
 ### Changed
 - Website (`smooth-lingua.com`) content updated to match the new library documentation: Concepts section, updated Quick Start, When/Not guidance, and refreshed Changelog.
