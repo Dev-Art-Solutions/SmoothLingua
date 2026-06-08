@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-06-08
+
+### Added
+
+- **Confidence score** — every `Response` now carries a `Confidence` property (0–1). For domains with a
+  single intent `SingleIntentPredictor` returns `1.0`; for multi-intent domains the raw SDCA scores are
+  normalised with softmax.
+- **Fallback intent** — when the predicted confidence falls below a configurable threshold the agent
+  automatically routes to a fallback intent instead of an uncertain prediction. Two new fields on `Domain`
+  control this behaviour:
+  - `ConfidenceThreshold` (default `0.4`) — minimum confidence required to accept a prediction.
+  - `FallbackIntentName` (default `"nlu_fallback"`) — the intent used when confidence is too low.
+- **Entity extraction** — `Response` now carries an optional `ExtractedEntities` dictionary
+  (`Dictionary<string, string>?`). At runtime the agent scans the user input for words that match any
+  entity's example list and returns each match keyed by entity name. Requires `Entities` to be defined on
+  the `Domain`; returns `null` otherwise.
+
+### Changed
+
+- `IPredictor.Predict` return type changed from `string` to `(string IntentName, float Confidence)`.
+- `Agent` constructor gains a third parameter: `Domain domain`.
+
+### Breaking changes and migration from v1.x
+
+**`Response` has a new required positional parameter `Confidence`.**
+
+```csharp
+// v1.x
+Response r = new("Greeting", messages);
+
+// v2.0
+Response r = new("Greeting", messages, 0.9f);
+```
+
+If you pattern-match or deconstruct `Response` you need to handle the third element.
+
+**`IPredictor.Predict` now returns a tuple.**
+
+Custom `IPredictor` implementations must be updated:
+
+```csharp
+// v1.x
+public string Predict(string text) => "myIntent";
+
+// v2.0
+public (string IntentName, float Confidence) Predict(string text) => ("myIntent", 1.0f);
+```
+
+**`Agent` requires `Domain` in its constructor.**
+
+If you instantiate `Agent` directly (rather than via `AgentLoader`) pass the `Domain` as the third argument.
+
 ## [1.2.0] - 2026-06-07
 
 ### Added
@@ -43,7 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Trainer`, `Agent`, `AgentLoader`, `Conversation`, `Domain` core types.
 - NuGet package `SmoothLingua`.
 
-[Unreleased]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.0.6...v1.1.0
 [1.0.6]: https://github.com/Dev-Art-Solutions/SmoothLingua/releases/tag/v1.0.6

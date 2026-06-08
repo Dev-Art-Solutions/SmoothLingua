@@ -30,7 +30,7 @@ public class AgentLoader
         var ruleManagerFactory = new RuleManagerFactory(domain.Rules);
         var storyManagerFactory = new StoryManagerFactory(domain.Stories);
 
-        return new Agent(predictor, new ConversationManager(ruleManagerFactory, storyManagerFactory, domain));
+        return new Agent(predictor, new ConversationManager(ruleManagerFactory, storyManagerFactory, domain), domain);
     }
 
     /// <summary>Loads the model from an in-memory or arbitrary stream.</summary>
@@ -43,7 +43,7 @@ public class AgentLoader
         var ruleManagerFactory = new RuleManagerFactory(domain.Rules);
         var storyManagerFactory = new StoryManagerFactory(domain.Stories);
 
-        return new Agent(predictor, new ConversationManager(ruleManagerFactory, storyManagerFactory, domain));
+        return new Agent(predictor, new ConversationManager(ruleManagerFactory, storyManagerFactory, domain), domain);
     }
 
     private static async Task<Domain> GetDomain(Stream stream, CancellationToken cancellationToken = default)

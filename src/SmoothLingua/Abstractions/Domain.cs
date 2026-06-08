@@ -13,4 +13,13 @@ namespace SmoothLingua.Abstractions;
 /// <param name="Rules">Always-active single-turn shortcuts that take precedence over stories.</param>
 /// <param name="Slots">Optional slot definitions for extracting named values from user messages.</param>
 /// <param name="Entities">Optional entity definitions that list known values for each slot.</param>
-public record Domain(List<Intent> Intents, List<Story> Stories, List<Rule> Rules, List<Slot>? Slots = default, List<Entity>? Entities = default);
+/// <param name="ConfidenceThreshold">Minimum confidence required to use the predicted intent. Predictions below this value trigger the fallback intent. Default is <c>0.4</c>.</param>
+/// <param name="FallbackIntentName">Intent name used when the predicted confidence is below <see cref="ConfidenceThreshold"/>. Default is <c>"nlu_fallback"</c>.</param>
+public record Domain(
+    List<Intent> Intents,
+    List<Story> Stories,
+    List<Rule> Rules,
+    List<Slot>? Slots = default,
+    List<Entity>? Entities = default,
+    float ConfidenceThreshold = 0.4f,
+    string FallbackIntentName = "nlu_fallback");

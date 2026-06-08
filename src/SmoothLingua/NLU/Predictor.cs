@@ -20,8 +20,20 @@ public class Predictor : IPredictor
         predictionEngine = context.Model.CreatePredictionEngine<IntentTrainingData, IntentPrediction>(context.Model.Load(stream, out var _));
     }
 
-    public string Predict(string text)
+    public (string IntentName, float Confidence) Predict(string text)
     {
-        return predictionEngine.Predict(new IntentTrainingData(text, string.Empty)).PredictedLabel;
+        var prediction = predictionEngine.Predict(new IntentTrainingData(text, string.Empty));
+        return (prediction.PredictedLabel, ComputeConfidence(prediction.Score));
+    }
+
+    // Softmax over raw SDCA scores to produce a value in (0, 1].
+    private static float ComputeConfidence(float[] scores)
+    {
+        if (scores.Length == 0)
+            return 0f;
+
+        var max = scores.Max();
+        var expScores = scores.Select(s => Math.Exp(s - max)).ToArray();
+        return (float)(expScores.Max() / expScores.Sum());
     }
 }

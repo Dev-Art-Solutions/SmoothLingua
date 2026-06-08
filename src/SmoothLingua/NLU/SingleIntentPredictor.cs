@@ -4,5 +4,5 @@ using Abstractions.NLU;
 
 public class SingleIntentPredictor(string intentName) : IPredictor
 {
-    public string Predict(string text) => intentName;
+    public (string IntentName, float Confidence) Predict(string text) => (intentName, 1.0f);
 }
