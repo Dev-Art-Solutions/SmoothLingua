@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.4.2" />
@@ -25,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmoothLingua\SmoothLingua.csproj" />
+    <ProjectReference Include="..\SmoothLingua.Server\SmoothLingua.Server.csproj" />
   </ItemGroup>
 
 </Project>

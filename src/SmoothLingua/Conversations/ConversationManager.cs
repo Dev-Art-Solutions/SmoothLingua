@@ -1,4 +1,4 @@
-﻿namespace SmoothLingua.Conversations;
+namespace SmoothLingua.Conversations;
 
 using System.Collections.Concurrent;
 
@@ -7,17 +7,41 @@ using SmoothLingua.Abstractions;
 using SmoothLingua.Abstractions.Rules;
 using SmoothLingua.Abstractions.Stories;
 
-public class ConversationManager(IRuleManagerFactory ruleManagerFactory, IStoryManagerFactory storyManagerFactory, Domain domain) : IConversationManager
+public class ConversationManager : IConversationManager
 {
-    private readonly IRuleManagerFactory ruleManagerFactory = ruleManagerFactory;
-    private readonly IStoryManagerFactory storyManagerFactory = storyManagerFactory;
-    private readonly Domain domain = domain;
+    private readonly IRuleManagerFactory ruleManagerFactory;
+    private readonly IStoryManagerFactory storyManagerFactory;
+    private readonly Domain domain;
+    private readonly IConversationStore store;
     private readonly ConcurrentDictionary<string, Conversation> conversations = new();
 
+    public ConversationManager(
+        IRuleManagerFactory ruleManagerFactory,
+        IStoryManagerFactory storyManagerFactory,
+        Domain domain,
+        IConversationStore? store = null)
+    {
+        this.ruleManagerFactory = ruleManagerFactory;
+        this.storyManagerFactory = storyManagerFactory;
+        this.domain = domain;
+        this.store = store ?? new InMemoryConversationStore();
+    }
+
     public IConversation Get(string conversationId)
-        => conversations.GetOrAdd(conversationId,
-            (x) => new Conversation(conversationId,
-                ruleManagerFactory.Create(),
-                storyManagerFactory.Create(),
-                domain));
+    {
+        if (conversations.TryGetValue(conversationId, out var existing))
+            return existing;
+
+        var savedState = this.store.Get(conversationId);
+        var conversation = new Conversation(
+            conversationId,
+            ruleManagerFactory.Create(),
+            storyManagerFactory.Create(),
+            domain,
+            this.store,
+            savedState);
+
+        conversations.TryAdd(conversationId, conversation);
+        return conversation;
+    }
 }

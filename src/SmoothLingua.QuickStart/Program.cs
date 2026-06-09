@@ -1,6 +1,7 @@
 using SmoothLingua;
 using SmoothLingua.Abstractions;
 using SmoothLingua.Abstractions.Stories;
+using SmoothLingua.Conversations;
 
 // ── Shared domain ────────────────────────────────────────────────────────────
 
@@ -66,6 +67,28 @@ var conversationId2 = Guid.NewGuid().ToString();
 PrintResponse(agentFromFile.Handle(conversationId2, "hello"));
 PrintResponse(agentFromFile.Handle(conversationId2, "I am fine"));
 PrintResponse(agentFromFile.Handle(conversationId2, "I am from USA"));
+
+// ── Example 3: persistent conversation (survives process restart) ─────────────
+
+Console.WriteLine("\n=== Example 3: FileConversationStore (persistent state) ===");
+
+const string storeDir = "conversation-store";
+const string persistentConvId = "demo-persistent-session";
+var fileStore = new FileConversationStore(storeDir);
+var persistentAgent = await AgentLoader.Load(modelPath, store: fileStore);
+
+var existingState = fileStore.Get(persistentConvId);
+if (existingState != null)
+{
+    Console.WriteLine($"Resuming existing conversation (story step {existingState.ActiveStep})...");
+}
+else
+{
+    Console.WriteLine("Starting a fresh conversation...");
+}
+
+PrintResponse(persistentAgent.Handle(persistentConvId, "hello"));
+Console.WriteLine($"State saved to '{storeDir}/{persistentConvId}.json' — re-run to continue from here.");
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

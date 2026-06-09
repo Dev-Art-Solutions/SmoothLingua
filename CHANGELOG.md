@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-06-09
+
+### Added
+
+- **`IConversationStore` abstraction** — lives in the core package with no ASP.NET dependency.
+  Exposes `Get`, `Save`, and `Reset`; any host (console, desktop, web service) uses the same types.
+- **`InMemoryConversationStore`** — default implementation, preserves existing behaviour exactly.
+- **`FileConversationStore`** — durable implementation that serialises each conversation as a JSON
+  file. Conversation state survives process restarts. Thread-safe via an internal lock; no external
+  dependencies required.
+- **`ConversationState`** record — serialisable snapshot of a conversation (slot values, active
+  story step, active story names).
+- **`IStoryManager.GetState` / `LoadState`** — allows story progress to be captured and restored.
+- **`IConversation.GetState`** — exposes the current state snapshot for persistence.
+- **`SmoothLingua.Server`** — new minimal ASP.NET Core Web API project:
+  - `POST /conversations/{id}/messages` — processes a user message and returns a `Response`.
+  - `POST /conversations/{id}/reset` — resets conversation state.
+  - `GET /health` — liveness check.
+  - `services.AddSmoothLingua(configuration)` DI extension; automatically selects
+    `FileConversationStore` when `SmoothLingua:StoreDirectory` is configured.
+- **`Dockerfile`** — multi-stage build for `SmoothLingua.Server`; mounts `/app/data` as a volume
+  for the model file and conversation store.
+- **Console persistence demo** — QuickStart Example 3 demonstrates a conversation that resumes
+  from `FileConversationStore` after a process restart.
+- Unit tests for `FileConversationStore` (including restart-survival test).
+- Integration tests for all three server endpoints via `WebApplicationFactory`.
+
+### Changed
+
+- `AgentLoader.Load(...)` gains an optional `store:` parameter. When omitted, `InMemoryConversationStore`
+  is used — no behaviour change for existing callers.
+- `ConversationManager` gains an optional `IConversationStore` constructor parameter with the same
+  default, ensuring full backward compatibility.
+
 ## [2.0.0] - 2026-06-08
 
 ### Added
@@ -95,7 +129,8 @@ If you instantiate `Agent` directly (rather than via `AgentLoader`) pass the `Do
 - `Trainer`, `Agent`, `AgentLoader`, `Conversation`, `Domain` core types.
 - NuGet package `SmoothLingua`.
 
-[Unreleased]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.0.6...v1.1.0

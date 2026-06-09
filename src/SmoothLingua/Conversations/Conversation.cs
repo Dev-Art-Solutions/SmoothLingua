@@ -1,4 +1,4 @@
-﻿namespace SmoothLingua.Conversations;
+namespace SmoothLingua.Conversations;
 
 using Abstractions.Conversations;
 using Abstractions.Rules;
@@ -12,15 +12,34 @@ public class Conversation : IConversation
     private readonly IRuleManager ruleManager;
     private readonly IStoryManager storyManager;
     private readonly Domain domain;
+    private readonly IConversationStore store;
     private Dictionary<string, string>? slots;
 
-    public Conversation(string id, IRuleManager ruleManager, IStoryManager storyManager, Domain domain)
+    public Conversation(
+        string id,
+        IRuleManager ruleManager,
+        IStoryManager storyManager,
+        Domain domain,
+        IConversationStore store,
+        ConversationState? initialState = null)
     {
         Id = id;
         this.ruleManager = ruleManager;
         this.storyManager = storyManager;
         this.domain = domain;
-        slots = domain.Slots?.ToDictionary(x => x.Name, x => x.DefaultValue ?? string.Empty);
+        this.store = store;
+
+        if (initialState != null)
+        {
+            slots = initialState.Slots != null
+                ? new Dictionary<string, string>(initialState.Slots)
+                : null;
+            storyManager.LoadState(initialState.ActiveStep, initialState.ActiveStoryNames);
+        }
+        else
+        {
+            slots = domain.Slots?.ToDictionary(x => x.Name, x => x.DefaultValue ?? string.Empty);
+        }
     }
 
     public string Id { get; }
@@ -59,7 +78,7 @@ public class Conversation : IConversation
         {
             storyManager.ClearState();
             result.Add(response ?? string.Empty);
-
+            store.Save(Id, GetState());
             return result;
         }
 
@@ -76,6 +95,7 @@ public class Conversation : IConversation
             }
         }
 
+        store.Save(Id, GetState());
         return result;
     }
 
@@ -83,5 +103,12 @@ public class Conversation : IConversation
     {
         storyManager.ClearState();
         slots = domain.Slots?.ToDictionary(x => x.Name, x => x.DefaultValue ?? string.Empty);
+        store.Reset(Id);
+    }
+
+    public ConversationState GetState()
+    {
+        var (activeStep, activeStoryNames) = storyManager.GetState();
+        return new ConversationState(slots != null ? new Dictionary<string, string>(slots) : null, activeStep, activeStoryNames);
     }
 }

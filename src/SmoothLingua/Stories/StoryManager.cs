@@ -15,6 +15,15 @@ public class StoryManager(List<Story> stories) : IStoryManager
         activeStep = 0;
     }
 
+    public (int ActiveStep, List<string> ActiveStoryNames) GetState()
+        => (activeStep, activeStories.Select(s => s.Name).ToList());
+
+    public void LoadState(int activeStep, List<string> activeStoryNames)
+    {
+        this.activeStep = activeStep;
+        activeStories = stories.Where(s => activeStoryNames.Contains(s.Name)).ToList();
+    }
+
     public bool TryGetResponse(string intentName, out List<string> responses)
     {
         if (activeStories.Count > 0 && TryGetResponseFromStories(activeStories, intentName, out responses))
