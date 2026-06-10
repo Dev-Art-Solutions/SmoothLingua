@@ -1,34 +1,58 @@
 ﻿namespace SmoothLingua;
 
 using Abstractions;
+using Abstractions.Analytics;
 using Abstractions.Conversations;
 using Abstractions.NLU;
+using SmoothLingua.Analytics;
 
 /// <summary>
 /// Default implementation of <see cref="IAgent"/>. Predicts the user's intent, delegates to the
 /// conversation manager for story/rule resolution, and returns the bot's reply.
 /// Obtain an instance via <see cref="AgentLoader.Load(string, CancellationToken)"/>.
 /// </summary>
-public class Agent(IPredictor predictor, IConversationManager conversationManager, Domain domain) : IAgent
+public class Agent : IAgent
 {
     private static readonly char[] EntitySeparators = ['!', '?', '.', ',', ':', ';', ' '];
 
-    private readonly IPredictor predictor = predictor;
-    private readonly IConversationManager conversationManager = conversationManager;
-    private readonly Domain domain = domain;
+    private readonly IPredictor predictor;
+    private readonly IConversationManager conversationManager;
+    private readonly Domain domain;
+    private readonly IAnalyticsRecorder analyticsRecorder;
+
+    /// <summary>Creates an agent without analytics recording. Equivalent to passing <see cref="NullAnalyticsRecorder"/>.</summary>
+    public Agent(IPredictor predictor, IConversationManager conversationManager, Domain domain)
+        : this(predictor, conversationManager, domain, NullAnalyticsRecorder.Instance)
+    {
+    }
+
+    /// <summary>Creates an agent that records every turn to the supplied <paramref name="analyticsRecorder"/>.</summary>
+    public Agent(IPredictor predictor, IConversationManager conversationManager, Domain domain, IAnalyticsRecorder analyticsRecorder)
+    {
+        this.predictor = predictor;
+        this.conversationManager = conversationManager;
+        this.domain = domain;
+        this.analyticsRecorder = analyticsRecorder;
+    }
 
     /// <inheritdoc/>
     public Response Handle(string conversationId, string input)
     {
         var (intentName, confidence) = predictor.Predict(input);
 
-        var effectiveIntent = confidence >= domain.ConfidenceThreshold
-            ? intentName
-            : domain.FallbackIntentName;
+        var isFallback = confidence < domain.ConfidenceThreshold;
+        var effectiveIntent = isFallback ? domain.FallbackIntentName : intentName;
 
         var conversation = conversationManager.Get(conversationId);
         var messages = conversation.HandleIntent(effectiveIntent, input);
         var entities = ExtractEntities(input);
+
+        analyticsRecorder.Record(new AnalyticsEvent(
+            ConversationId: conversationId,
+            IntentName: effectiveIntent,
+            Confidence: confidence,
+            IsFallback: isFallback,
+            Timestamp: DateTimeOffset.UtcNow));
 
         return new Response(effectiveIntent, messages, confidence, entities);
     }

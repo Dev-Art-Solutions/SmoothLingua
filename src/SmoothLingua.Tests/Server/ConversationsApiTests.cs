@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using SmoothLingua.Abstractions;
+using SmoothLingua.Abstractions.Analytics;
 using SmoothLingua.Abstractions.Stories;
 
 public class ConversationsApiTests : IClassFixture<ConversationsApiTests.ApiFixture>
@@ -65,12 +66,16 @@ public class ConversationsApiTests : IClassFixture<ConversationsApiTests.ApiFixt
         {
             builder.ConfigureServices(services =>
             {
-                // Replace the agent registered via AddSmoothLingua with one backed by our in-memory model.
+                // Replace the agent registered via AddSmoothLingua with one backed by our in-memory model
+                // but keep the same analytics recorder so /insights reflects activity in tests.
                 var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IAgent));
                 if (descriptor != null) services.Remove(descriptor);
 
-                services.AddSingleton<IAgent>(_ =>
-                    AgentLoader.Load(new MemoryStream(ModelBytes)).GetAwaiter().GetResult());
+                services.AddSingleton<IAgent>(sp =>
+                    AgentLoader.Load(
+                        new MemoryStream(ModelBytes),
+                        analyticsRecorder: sp.GetRequiredService<IAnalyticsRecorder>()
+                    ).GetAwaiter().GetResult());
             });
         }
 

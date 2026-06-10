@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-06-10
+
+### Added
+
+- **`IAnalyticsRecorder` abstraction** — captures anonymous per-turn signals (intent, confidence,
+  fallback flag, conversation id) and exposes them as aggregates. Lives in the core package and
+  has no external dependencies.
+- **`InMemoryAnalyticsRecorder`** — thread-safe default implementation; computes totals, fallback
+  rate, average confidence, average conversation length, and per-intent stats on demand.
+- **`NullAnalyticsRecorder`** — zero-cost no-op used by default so existing hosts opt in to
+  analytics rather than paying for it implicitly.
+- **`AnalyticsEvent` / `AnalyticsSnapshot` / `IntentStat`** — public records that describe a single
+  turn and the aggregate view over the whole stream.
+- **`GET /insights`** on `SmoothLingua.Server` — returns the snapshot as JSON, never exposes
+  conversation identifiers or message text.
+- **`POST /playground/predict`** on `SmoothLingua.Server` — trains a small per-request model from
+  visitor-supplied intent examples and predicts the matching intent for a piece of text. Includes
+  an LRU cache over trained predictors and hard caps on intent / example counts.
+- **CORS support** on `SmoothLingua.Server` — configurable via `SmoothLingua:Cors:AllowedOrigins`;
+  the demo subdomain (`chat.smooth-lingua.com`) and the main site are allowed by default.
+- **Interactive demo at `chat.smooth-lingua.com`** — vanilla JS + Bootstrap chat page that talks
+  to the public API, surfaces the predicted intent and confidence on every reply, hosts a
+  Playground tab for user-defined intents, and an Insights tab for live aggregates.
+- Tests: aggregation correctness and thread-safety for `InMemoryAnalyticsRecorder`, integration
+  tests for `/insights` (including a "never leaks conversation IDs" check) and `/playground/predict`.
+
+### Changed
+
+- `AgentLoader.Load(...)` gains an optional `analyticsRecorder:` parameter. When omitted, the
+  no-op recorder is used and existing callers see no behaviour change.
+- `Agent` exposes a second constructor that accepts an `IAnalyticsRecorder`; the existing
+  constructor remains and forwards to the no-op recorder.
+- `AddSmoothLingua` registers an `IAnalyticsRecorder` (`InMemoryAnalyticsRecorder`) alongside the
+  agent and conversation store.
+
 ## [2.1.0] - 2026-06-09
 
 ### Added
@@ -129,7 +164,8 @@ If you instantiate `Agent` directly (rather than via `AgentLoader`) pass the `Do
 - `Trainer`, `Agent`, `AgentLoader`, `Conversation`, `Domain` core types.
 - NuGet package `SmoothLingua`.
 
-[Unreleased]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/Dev-Art-Solutions/SmoothLingua/compare/v1.1.0...v1.2.0

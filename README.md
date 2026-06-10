@@ -100,6 +100,31 @@ await trainer.Train(domain, "model.zip", default);
 var agent = await AgentLoader.Load("model.zip");
 ```
 
+## Behavioural insights
+
+SmoothLingua ships with an opt-in `IAnalyticsRecorder` that captures **anonymous** per-turn signals — predicted intent, confidence, and whether the agent fell back — and exposes them as aggregates. No message text or conversation identifiers are retained in the snapshot.
+
+```csharp
+using SmoothLingua.Analytics;
+
+var recorder = new InMemoryAnalyticsRecorder();
+var agent = await AgentLoader.Load("model.zip", analyticsRecorder: recorder);
+
+agent.Handle("conv-1", "hi");
+agent.Handle("conv-1", "what's the weather like on Jupiter?");
+
+var snapshot = recorder.GetSnapshot();
+// snapshot.TotalMessages, snapshot.FallbackRate, snapshot.AverageConfidence, snapshot.Intents …
+```
+
+**How to read the signals**
+
+- A high **fallback rate** means many user messages land below the confidence threshold. Either lower the threshold, or add more training examples to the intents users are trying to reach.
+- A popular intent with a **low average confidence** is a noisy one. The model can usually pick it, but only barely — add more (or more varied) examples and the score will firm up.
+- A low **average conversation length** can signal that the agent loses the thread quickly. Combined with a high fallback rate, that usually points at a missing intent.
+
+The `SmoothLingua.Server` host wires an `InMemoryAnalyticsRecorder` automatically and exposes the snapshot at `GET /insights`. Hosts that don't pass a recorder fall back to a zero-cost `NullAnalyticsRecorder` — nothing is captured and nothing changes about response behaviour.
+
 ## When SmoothLingua, when not
 
 **Good fit**

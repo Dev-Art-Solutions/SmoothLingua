@@ -5,9 +5,11 @@ using Moq;
 using Xunit;
 
 using SmoothLingua.Abstractions;
+using SmoothLingua.Abstractions.Analytics;
 using SmoothLingua.Abstractions.Conversations;
 using SmoothLingua.Abstractions.NLU;
 using SmoothLingua.Abstractions.Stories;
+using SmoothLingua.Analytics;
 
 public class AgentTests
 {
@@ -139,6 +141,32 @@ public class AgentTests
 
         // Assert
         Assert.Null(response.ExtractedEntities);
+    }
+
+    [Fact]
+    public void Handle_RecordsAnalyticsEvent_WithEffectiveIntentAndFallbackFlag()
+    {
+        var predictorMock = new Mock<IPredictor>();
+        predictorMock.Setup(p => p.Predict("hello")).Returns(("Greeting", 0.9f));
+        predictorMock.Setup(p => p.Predict("???")).Returns(("Greeting", 0.1f));
+
+        var conversationManagerMock = new Mock<IConversationManager>();
+        var conversationMock = new Mock<IConversation>();
+        conversationMock.Setup(c => c.HandleIntent(It.IsAny<string>(), It.IsAny<string>())).Returns([]);
+        conversationManagerMock.Setup(cm => cm.Get(It.IsAny<string>())).Returns(conversationMock.Object);
+
+        var recorder = new InMemoryAnalyticsRecorder();
+        var agent = new Agent(predictorMock.Object, conversationManagerMock.Object, MinimalDomain(), recorder);
+
+        agent.Handle("conv-1", "hello");
+        agent.Handle("conv-1", "???");
+
+        var snapshot = recorder.GetSnapshot();
+        Assert.Equal(2, snapshot.TotalMessages);
+        Assert.Equal(1, snapshot.TotalConversations);
+        Assert.Equal(1, snapshot.FallbackHits);
+        Assert.Contains(snapshot.Intents, i => i.IntentName == "Greeting" && i.Count == 1);
+        Assert.Contains(snapshot.Intents, i => i.IntentName == "nlu_fallback" && i.Count == 1);
     }
 
     [Fact]

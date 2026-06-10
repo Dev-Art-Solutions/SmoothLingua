@@ -15,7 +15,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <IncludeSymbols>True</IncludeSymbols>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageVersion Condition="'$(Version)' == ''">2.1.0</PackageVersion>
+    <PackageVersion Condition="'$(Version)' == ''">2.2.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
